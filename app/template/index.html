@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/f1aff2a005.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+
+    <title>Translate Application</title>
+</head>
+<body>
+    {% block content %}
+        <div class="container">
+            <h1>Translate Application</h1>
+            <div class="container_area">
+                <div class="input_">
+                    <div class="select">
+                        <select name="languages" id="src_language">
+                            <option value="auto">Automatic detection</option>
+                            {% for language in languages %}
+                            <option value="{{ language }}">{{ language }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <textarea id="input_data" name="input_text"rows="5" cols="33"></textarea>
+                </div>
+                <div class="icon">
+                </div>
+                <div class="result_">
+                    <div class="select">
+                        <select name="languages" id="dest_language">
+                            <option value="select">Select language</option>
+                            {% for language in languages %}
+                            <option value="{{ language }}">{{ language }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <textarea id="output_text" name="output_text" rows="5" cols="33"></textarea>
+                </div>
+            </div>
+            <p id="sugg"></p>
+            <p id="msg_error"></p>
+            <div class="button_translate"><button onclick="fetchData()">Translate</button></div>
+        </div>
+    {% endblock %}
+    <script>
+        let contentGenerated = false;
+    
+        function fetchData() {
+            let inputData = document.getElementById('input_data');
+            let destLanguage = document.getElementById('dest_language');
+            let srcLanguage = document.getElementById('src_language');
+            let para = document.getElementById('msg_error');
+            let sugg = document.getElementById('sugg');
+    
+            if (contentGenerated) {
+                return;
+            }
+    
+            if (destLanguage.value === "select") {
+                para.textContent = "Please select the destination language !";
+            } else if (inputData.value === "") {
+                para.textContent = "Please complete the text area !";
+            } else {
+                fetch(`/?inputData=${inputData.value}&srcLanguage=${srcLanguage.value}&destLanguage=${destLanguage.value}`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Réponse du serveur:', data);
+                        document.getElementById('output_text').value = data.translation;
+                        let divIcon = document.querySelector('.icon');
+                        let iconElement = document.createElement('i');
+                        divIcon.appendChild(iconElement);
+                        iconElement.style.cursor = "pointer";
+                        iconElement.classList.add('fa-solid', 'fa-arrows-rotate');
+                        iconElement.addEventListener("click", () => {
+                            let tempSelectValue = srcLanguage.value;
+                            if (srcLanguage.value === "auto") {
+                                srcLanguage.value = destLanguage.value;
+                                destLanguage.value = data.detectSrc;
+                            }
+                            else {
+                                srcLanguage.value = destLanguage.value;
+                                destLanguage.value = tempSelectValue;
+                            }
+                            let tempTextareaValue = inputData.value;
+                            inputData.value = document.getElementById('output_text').value;
+                            document.getElementById('output_text').value = tempTextareaValue;
+                            sugg.textContent = "";
+                            link.textContent = "";
+                        });
+                        if (data.detectSrc != data.src) {
+                            sugg.textContent = "Detected language: ";
+                            let link = document.createElement("a");
+                            let src = document.getElementById('src_language');
+                            link.textContent = data.detectSrc;
+                            link.style.cursor = "pointer";
+                            link.addEventListener("click", () => {
+
+                                for (let i = 0; i < src.options.length; i++) {
+                                    if (src.options[i].value === data.detectSrc) {
+                                        src.selectedIndex = i;
+                                    }
+                                }
+                                sugg.textContent = "";
+                                link.textContent = "";
+
+                            });
+                            sugg.appendChild(link);
+                        } else {
+                            sugg.textContent = "";
+                        }
+                        contentGenerated = true;
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                    });
+                para.textContent = "";
+            }
+        }
+    </script>
+    
+</body>
+</html>

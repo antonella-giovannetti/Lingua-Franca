@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+html {
+    box-sizing: border-box;
+    background-color: rgb(240, 240, 240);
+    }
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+}
+
+textarea {
+    display: block;
+}
+
+.container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 45rem;
+    height: 35rem;
+    border-radius: 15px;
+    background-color: white;
+    box-shadow: 0px 10px 13px -7px #5e5e5e, 5px 5px 5px 0px rgba(220,220,220,0);
+}
+
+.container_area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon {
+    align-self: flex-start;
+    padding: 15px;
+}
+
+.icon i {
+    color: rgba(142,197,252,1);
+}
+
+.container h1 {
+    margin: 45px 0 60px 0;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+
+.button_translate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button_translate button {
+    cursor: pointer;
+    margin: 15px 0;
+    background-color: rgba(142,197,252,1);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    box-shadow: 0px 10px 13px -7px #bababa, 5px 5px 5px 0px rgba(227, 227, 227, 0);
+}
+
+.container_area .select {
+    padding: 15px 0 ;
+}
+
+.container_area select {
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    outline: 0;
+
+}
+
+.container_area textarea {
+    border-radius: 10px; 
+    border: 1px solid #ccc; 
+    margin: 5px; 
+}
+
+
+#msg_error {
+    margin: 15px 0;
+    text-align: center;
+    font-size: 15px;
+    color: rgb(251, 60, 60);
+}
+
+#sugg {
+    color: #5e5e5e;
+    margin: 3px 0 15px 85px;
+    font-size: 13px;
+}
+
+#sugg a {
+    color:rgba(142,197,252,1);
+    text-transform: capitalize;
+}
